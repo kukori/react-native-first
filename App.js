@@ -1,45 +1,45 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
+import Header from './components/Header';
+import TodoItem from './components/TodoItem';
+import AddTodo from './components/AddTodo';
 
 export default function App() {
-  const [people, setPeople] = useState([
-    { name: 'attila', key: '1'},
-    { name: 'yoshi', key: '2'},
-    { name: 'mario', key: '3'},
-    { name: 'luigi', key: '4'},
-    { name: 'peach', key: '5'},
-    { name: 'toad', key: '6'},
-    { name: 'bowser', key: '7'},
+  const [todos, setTodos] = useState([
+    { text: 'buy coffee', key: '1'},
+    { text: 'create a react native app', key: '2'},
+    { text: 'be a millionaire', key: '3'},
   ]);
-  
-  const onPress = (key) => {
-    console.log(key);
-    setPeople((prevPeople) => {
-      return prevPeople.filter((item) => item.key !== key )
+
+  const onItemPress = (key) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter((item) => item.key !== key )
+    });
+  }
+
+  const onAddItem = (text) => {
+    setTodos((prevTodos) => {
+      return [
+        ...prevTodos, 
+        {text: text, key: Math.random().toString()}
+      ]
     });
   }
 
   return (
     <View style={styles.container}>
-
-      <FlatList 
-        data={people} 
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => onPress(item.key)}>
-            <Text style={styles.item}>{ item.name }</Text>
-          </TouchableOpacity>
-        )}
-      />
-
-      {/* <ScrollView>
-        {people.map(item => (
-          <View key={item.key}>
-            <Text style={styles.item}>{ item.name }</Text>
-          </View>
-        ))}
-      </ScrollView> */}
-
-
+      <Header/>
+      <View style={styles.content}>
+        <AddTodo onAddItem={onAddItem} />
+        <View style={styles.list}>
+          <FlatList 
+            data={todos}
+            renderItem={({item}) => (
+              <TodoItem item={item} onItemPress={onItemPress} />
+            )}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -48,15 +48,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 40,
-    paddingHorizontal: 20
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
-  item: {
-    marginTop: 24,
-    padding: 30,
-    backgroundColor: 'pink',
-    fontSize: 24
+  content: {
+    padding: 40,
+  },
+  list: {
+    marginTop: 20
   }
 });
