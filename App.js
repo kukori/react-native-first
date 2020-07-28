@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, Alert } from 'react-native';
 import Header from './components/Header';
 import TodoItem from './components/TodoItem';
 import AddTodo from './components/AddTodo';
@@ -18,12 +18,17 @@ export default function App() {
   }
 
   const onAddItem = (text) => {
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos, 
-        {text: text, key: Math.random().toString()}
-      ]
-    });
+
+    if(text.length > 3) {
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos, 
+          {text: text, key: Math.random().toString()}
+        ]
+      });
+    } else {
+      Alert.alert('Warning!', 'The todo must be more than 3 characters!');
+    }
   }
 
   return (
